@@ -1,27 +1,44 @@
 var Matcher = require('./lib/matcher');
 
 var mdextract = module.exports = function (src, options) {
-  return new Document(src, options).parse();
+  var doc = new Document(options);
+  doc.parse(src);
+  return doc.blocks;
 };
 
 var rules = new Matcher({
   space: "\\s",
   string: '.*?',
+  eol: '(\\s*%{endcomment})?\\s*',
+  h2: '\\s*%{h2prefix}\\s*%{heading:string}%{eol}',
+  h3: '\\s*%{h3prefix}\\s*%{heading:string}%{eol}',
+  doc: '\\s*%{docprefix}\\s?%{doc:string}%{eol}',
+  blank: '%{eol}',
   h2prefix: '/\\*\\*',
-  h2: '\\s*%{h2prefix}\\s*%{heading:string}(\\s*%{endcomment})?',
+  h3prefix: '\\*\\*\\*',
   docprefix: '\\*',
   endcomment: '\\*/',
-  doc: '\\s*%{docprefix}\\s*%{string}(\\s*%{endcomment})?',
-  blank: '\\s*%{endcomment}\\s*'
 });
 
-var Document = function (src, options) {
-  this.src = src;
+/**
+ * Document:
+ * A markdown document with multiple source files.
+ */
+
+var Document = function (options) {
+  /*** options: the options passed onto the constructor. */
   this.options = options || {};
+  this.blocks = [];
 };
 
 Document.prototype = {
-  parse: function () {
+
+  /***
+   * parse: .parse(options)
+   * parses the document and saves its JSON tree to [data].
+   */
+
+  parse: function (src, fname) {
     var blocks = [];
     var block;
 
@@ -32,7 +49,7 @@ Document.prototype = {
       block = null;
     }
 
-    eachLine(this.src, function (line, i) {
+    eachLine(src, function (line, i) {
       rules.switch(line, {
         h2: function (m) {
           flush();
@@ -40,16 +57,19 @@ Document.prototype = {
             heading: m.heading,
             level: 2,
             lines: [],
-            docline: i+1
+            docline: i+1,
+            filename: fname
           };
         },
         blank: function() {
           flush();
         },
         doc: function (m) {
-          block.lines.push(m.string);
+          if (!block) return;
+          block.lines.push(m.doc);
         },
         else: function () {
+          if (blocks.length === 0) return;
           blocks[blocks.length-1].codeline = i+1;
           flush();
         }
@@ -57,6 +77,8 @@ Document.prototype = {
     });
 
     flush();
+
+    this.blocks = this.blocks.concat(blocks);
     return blocks;
   }
 };
