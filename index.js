@@ -10,8 +10,8 @@ var rules = new Matcher({
   space: "\\s",
   string: '.*?',
   eol: '(\\s*%{endcomment})?\\s*',
-  h2: '\\s*%{h2prefix}\\s*%{heading:string}%{eol}',
-  h3: '\\s*%{h3prefix}\\s*%{heading:string}%{eol}',
+  h2: '\\s*%{h2prefix}\\s*%{doc:string}%{eol}',
+  h3: '\\s*%{h3prefix}\\s*%{doc:string}%{eol}',
   doc: '\\s*%{docprefix}\\s?%{doc:string}%{eol}',
   blank: '%{eol}',
   h2prefix: '/\\*\\*',
@@ -44,7 +44,7 @@ Document.prototype = {
 
     function flush() {
       if (!block) return;
-      if (block.lines) block.lines = block.lines.join("\n");
+      if (block.lines) block.lines = block.lines.join("\n").trim();
       blocks.push(block);
       block = null;
     }
@@ -54,9 +54,8 @@ Document.prototype = {
         h2: function (m) {
           flush();
           block = {
-            heading: m.heading,
             level: 2,
-            lines: [],
+            lines: [m.doc],
             docline: i+1,
             filename: fname
           };
