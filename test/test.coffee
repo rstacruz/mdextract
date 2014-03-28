@@ -1,7 +1,5 @@
 require './setup'
 
-mdextract = require('../index')
-
 describe 'Mdextract', ->
   it 'ok', ->
     str = """

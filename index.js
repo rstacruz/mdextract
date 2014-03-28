@@ -1,4 +1,5 @@
 var Matcher = require('./lib/matcher');
+var extend = require('util')._extend;
 
 var mdextract = module.exports = function (src, options) {
   var doc = new Document(options);
@@ -34,17 +35,20 @@ var Document = function (options) {
 Document.prototype = {
 
   /***
-   * parse: .parse(options)
+   * parse : .parse(options)
    * parses the document and saves its JSON tree to [data].
    */
 
   parse: function (src, fname) {
     var blocks = [];
     var block;
+    var doc = this;
 
     function flush() {
       if (!block) return;
       if (block.lines) block.lines = block.lines.join("\n").trim();
+      doc.parseText(block.lines, block);
+
       blocks.push(block);
       block = null;
     }
@@ -53,12 +57,12 @@ Document.prototype = {
       rules.switch(line, {
         h2: function (m) {
           flush();
-          block = {
+          block = new Block({
             level: 2,
             lines: [m.doc],
             docline: i+1,
             filename: fname
-          };
+          });
         },
         blank: function() {
           flush();
@@ -79,9 +83,51 @@ Document.prototype = {
 
     this.blocks = this.blocks.concat(blocks);
     return blocks;
+  },
+
+  /**
+   * parseText : parseText(text, block)
+   * Propagates text into the block
+   */
+
+  parseText: function (text, block) {
+    var lines = text.split("\n");
+    var m;
+    var bodylines = [];
+
+    lines.forEach(function (line, i) {
+      if (i === 0) {
+        if (m = line.match(/^(.*?):$/)) {
+          block.heading = m[1];
+        }
+        else if (m = line.match(/^(.*?) : (.*?)$/)) {
+          block.heading = m[1];
+          block.subheading = m[2];
+        }
+        else if (m = line.match(/^(.*?):(?: (.*?))?$/)) {
+          block.heading = m[1];
+          bodylines.push(m[2]);
+        }
+      } else {
+        bodylines.push(line);
+      }
+    });
+
+    block.body = bodylines.join("\n");
   }
 };
+
+/**
+ * Block:
+ * A block
+ */
+
+function Block (data) {
+  extend(this, data);
+}
 
 function eachLine (src, fn) {
   src.split('\n').forEach(fn);
 }
+
+mdextract.Document = Document;

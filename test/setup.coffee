@@ -5,3 +5,6 @@ chai.should()
 
 beforeEach -> global.sinon = require('sinon').sandbox.create()
 afterEach  -> global.sinon.restore()
+
+before ->
+  global.mdextract = require('../index')
