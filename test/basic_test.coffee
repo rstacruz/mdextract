@@ -12,7 +12,7 @@ describe 'Mdextract', ->
     var x = y
     """
 
-    out = mdextract(str)
+    out = mdextract(str).blocks
     expect(out).have.length 1
     expect(out[0].heading).eq 'hello'
     expect(out[0].body).eq 'world\nits great'
@@ -29,7 +29,7 @@ describe 'Mdextract', ->
      */
     """
 
-    out = mdextract(str)
+    out = mdextract(str).blocks
     expect(out).have.length 1
     expect(out[0].heading).eq 'hello'
     expect(out[0].body).eq 'world\n\n    abc'
@@ -37,7 +37,7 @@ describe 'Mdextract', ->
   it 'comment closing on doc heading EOL', ->
     str = "/** hello: world */"
 
-    out = mdextract(str)
+    out = mdextract(str).blocks
     expect(out).have.length 1
     expect(out[0].heading).eq 'hello'
 
@@ -48,6 +48,6 @@ describe 'Mdextract', ->
      * world */
     """
 
-    out = mdextract(str)
+    out = mdextract(str).blocks
     expect(out).have.length 1
     expect(out[0].body).eq 'world'

@@ -1,10 +1,21 @@
 var Matcher = require('./lib/matcher');
 var extend = require('util')._extend;
 
+/**
+ * mdextract:
+ * hello.
+ *
+ * To extract from source, use:
+ *
+ *     mdextract(source, options)
+ *
+ * Returns a JSON block.
+ */
+
 var mdextract = module.exports = function (src, options) {
   var doc = new Document(options);
   doc.parse(src);
-  return doc.blocks;
+  return doc;
 };
 
 var rules = new Matcher({
@@ -103,7 +114,7 @@ Document.prototype = {
     return blocks;
   },
 
-  /**
+  /***
    * warn : warn(text, file, line)
    * (internal) Issues a warning
    */
@@ -112,7 +123,7 @@ Document.prototype = {
     console.warn("%s:%s: warning: %s", file, line, text);
   },
 
-  /**
+  /***
    * processText : processText(text, block)
    * (internal) Propagates `text` into the given `block`.
    */
