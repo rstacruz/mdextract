@@ -46,11 +46,29 @@ Document.prototype = {
 
     function flush() {
       if (!block) return;
-      if (block.lines) block.lines = block.lines.join("\n").trim();
-      doc.parseText(block.lines, block);
+      if (!block.lines) {
+        warn("no lines found", block.docline);
+        block = null;
+        return;
+      }
+
+      if (block.lines) {
+        doc.processText(block.lines.join("\n").trim(), block);
+        delete block.lines;
+      }
+
+      if (!block.heading) {
+        warn("no heading found", block.docline);
+        block = null;
+        return;
+      }
 
       blocks.push(block);
       block = null;
+    }
+
+    function warn(text, line) {
+      doc.warn(text, fname, line);
     }
 
     eachLine(src, function (line, i) {
@@ -86,11 +104,20 @@ Document.prototype = {
   },
 
   /**
-   * parseText : parseText(text, block)
-   * Propagates text into the block
+   * warn : warn(text, file, line)
+   * (internal) Issues a warning
    */
 
-  parseText: function (text, block) {
+  warn: function (text, file, line) {
+    console.warn("%s:%s: warning: %s", file, line, text);
+  },
+
+  /**
+   * processText : processText(text, block)
+   * (internal) Propagates `text` into the given `block`.
+   */
+
+  processText: function (text, block) {
     var lines = text.split("\n");
     var m;
     var bodylines = [];
@@ -119,7 +146,14 @@ Document.prototype = {
 
 /**
  * Block:
- * A block
+ * A block. Options:
+ *
+ * ~ docline (number): line number where the documentation starts
+ * ~ codeline (number): line number where code starts
+ * ~ level (number): heading level
+ * ~ heading (string): heading text
+ * ~ subheading (string, optional): optional subheading text
+ * ~ body (string): body text
  */
 
 function Block (data) {

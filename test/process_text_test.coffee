@@ -1,16 +1,16 @@
 require './setup'
 
-parseText = null
+processText = null
 
-describe 'Parse text', ->
+describe 'Process text', ->
   before ->
-    parseText = mdextract.Document::parseText
+    processText = mdextract.Document::processText
 
   beforeEach ->
     @block = {}
 
   it 'heading', ->
-    parseText """
+    processText """
     constructor:
     ran on init
     """, @block
@@ -19,7 +19,7 @@ describe 'Parse text', ->
     expect(@block.body).eq 'ran on init'
 
   it 'subheading', ->
-    parseText """
+    processText """
     map : _.map()
     maps function to elements
     """, @block
@@ -29,7 +29,7 @@ describe 'Parse text', ->
     expect(@block.body).eq 'maps function to elements'
 
   it 'inline', ->
-    parseText """
+    processText """
     map: maps function to elements
     """, @block
 
@@ -37,7 +37,7 @@ describe 'Parse text', ->
     expect(@block.body).eq 'maps function to elements'
 
   it 'inline2', ->
-    parseText """
+    processText """
     map: maps a function to
     multiple elements
     """, @block

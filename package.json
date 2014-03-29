@@ -23,5 +23,8 @@
   "bin": {
     "command": "./bin/mdextract"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nopt": "^2.2.0"
+  }
 }
