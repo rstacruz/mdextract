@@ -51,78 +51,9 @@ Document.prototype = {
    */
 
   parse: function (src, fname) {
-    // TODO: refactor into a new class
-
-    var blocks = [];
-    var block;
-    var doc = this;
-
-    function flush() {
-      if (!block) return;
-      if (!block.lines) {
-        warn("no lines found", block.docline);
-        block = null;
-        return;
-      }
-
-      if (block.lines) {
-        doc.processText(block.lines.join("\n").trim(), block);
-        delete block.lines;
-      }
-
-      if (!block.heading) {
-        warn("no heading found", block.docline);
-        block = null;
-        return;
-      }
-
-      blocks.push(block);
-      block = null;
-    }
-
-    function warn(text, line) {
-      doc.warn(text, fname, line);
-    }
-
-    eachLine(src, function (line, i) {
-      rules.switch(line, {
-        h2: function (m) {
-          flush();
-          block = new Block({
-            level: 2,
-            lines: [m.doc],
-            docline: i+1,
-            filename: fname
-          });
-        },
-        h3: function (m) {
-          flush();
-          block = new Block({
-            level: 3,
-            lines: [m.doc],
-            docline: i+1,
-            filename: fname
-          });
-        },
-        blank: function() {
-          flush();
-        },
-        doc: function (m) {
-          if (!block) return;
-          block.lines.push(m.doc);
-        },
-        else: function () {
-          if (blocks.length === 0) return;
-          blocks[blocks.length-1].codeline = i+1;
-          flush();
-        }
-      });
-    });
-
-    flush();
-
-    this.blocks = this.blocks.concat(blocks);
-    return blocks;
+    var ctx = new Context(this, src, fname);
+    ctx.process();
+    this.blocks = this.blocks.concat(ctx.blocks);
   },
 
   /**
@@ -163,6 +94,83 @@ Document.prototype = {
     });
 
     block.body = bodylines.join("\n");
+  }
+};
+
+/***
+ * Context: a parsing context.
+ */
+
+function Context(doc, src, fname) {
+  this.doc = doc;
+  this.src = src;
+  this.fname = fname;
+  this.blocks = [];
+  this.block = undefined;
+}
+
+Context.prototype = {
+  process: function () {
+    var ctx = this;
+
+    eachLine(this.src, function (line, i) {
+      rules.switch(line, {
+        h2: function (m) {
+          ctx.flush();
+          ctx.block = ctx.newBlock(2, m.doc, i+1);
+        },
+        h3: function (m) {
+          ctx.flush();
+          ctx.block = ctx.newBlock(3, m.doc, i+1);
+        },
+        blank: function() {
+          ctx.flush();
+        },
+        doc: function (m) {
+          if (!ctx.block) return;
+          ctx.block.lines.push(m.doc);
+        },
+        else: function () {
+          if (ctx.blocks.length === 0) return;
+          ctx.blocks[ctx.blocks.length-1].codeline = i+1;
+          ctx.flush();
+        }
+      });
+    });
+
+    ctx.flush();
+  },
+
+  newBlock: function (level, line, docline) {
+    return new Block({
+      level: level,
+      lines: [line],
+      docline: docline,
+      filename: this.fname
+    });
+  },
+
+  flush: function () {
+    if (!this.block) return;
+
+    if (!this.block.lines) {
+      // warn("no lines found", block.docline);
+      this.block = null;
+      return;
+    }
+
+    this.block.lines = this.block.lines.join("\n").trim();
+    this.doc.processText(this.block.lines, this.block);
+    delete this.block.lines;
+
+    if (!this.block.heading) {
+      // warn("no heading found", block.docline);
+      this.block = null;
+      return;
+    }
+
+    this.blocks.push(this.block);
+    this.block = null;
   }
 };
 
