@@ -57,15 +57,6 @@ Document.prototype = {
   },
 
   /**
-   * warn : warn(text, file, line)
-   * (internal) Issues a warning
-   */
-
-  warn: function (text, file, line) {
-    console.warn("%s:%s: warning: %s", file, line, text);
-  },
-
-  /**
    * processText : processText(text, block)
    * (internal) Propagates `text` into the given `block`.
    */
@@ -155,12 +146,21 @@ Context.prototype = {
     return this.blocks[this.blocks.length-1];
   },
 
+  /**
+   * warn : warn(text, line)
+   * (internal) Issues a warning
+   */
+
+  warn: function (text, line) {
+    console.warn("%s:%s: warning: %s", this.fname, line, text);
+  },
+
   /** flush: finalizes the last block defined. */
   flush: function () {
     if (!this.block) return;
 
     if (!this.block.lines) {
-      // warn("no lines found", block.docline);
+      this.warn("no lines found", block.docline);
       this.block = null;
       return;
     }
@@ -170,7 +170,7 @@ Context.prototype = {
     delete this.block.lines;
 
     if (!this.block.heading) {
-      // warn("no heading found", block.docline);
+      this.warn("no heading found", block.docline);
       this.block = null;
       return;
     }
