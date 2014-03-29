@@ -18,6 +18,7 @@ describe 'Mdextract', ->
     expect(out[0].body).eq 'world\nits great'
     expect(out[0].docline).eq 1
     expect(out[0].codeline).eq 7
+    expect(out[0].level).eq 3
 
   it 'pre block', ->
     str = """
@@ -33,6 +34,15 @@ describe 'Mdextract', ->
     expect(out).have.length 1
     expect(out[0].heading).eq 'hello'
     expect(out[0].body).eq 'world\n\n    abc'
+    expect(out[0].level).eq 3
+
+  it 'level 2', ->
+    str = "/*** hello:\n* world */"
+
+    out = mdextract(str).blocks
+    expect(out).have.length 1
+    expect(out[0].heading).eq 'hello'
+    expect(out[0].level).eq 2
 
   it 'comment closing on doc heading EOL', ->
     str = "/** hello: world */"
@@ -40,6 +50,7 @@ describe 'Mdextract', ->
     out = mdextract(str).blocks
     expect(out).have.length 1
     expect(out[0].heading).eq 'hello'
+    expect(out[0].level).eq 3
 
   it 'comment closing on doc line EOL', ->
     str = """
@@ -51,3 +62,4 @@ describe 'Mdextract', ->
     out = mdextract(str).blocks
     expect(out).have.length 1
     expect(out[0].body).eq 'world'
+    expect(out[0].level).eq 3

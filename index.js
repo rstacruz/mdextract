@@ -1,7 +1,7 @@
 var Matcher = require('./lib/matcher');
 var extend = require('util')._extend;
 
-/**
+/***
  * mdextract:
  * hello.
  *
@@ -26,13 +26,13 @@ var rules = new Matcher({
   h3: '\\s*%{h3prefix}\\s*%{doc:string}%{eol}',
   doc: '\\s*%{docprefix}\\s?%{doc:string}%{eol}',
   blank: '%{eol}',
-  h2prefix: '/\\*\\*',
-  h3prefix: '\\*\\*\\*',
+  h2prefix: '/\\*\\*\\*',
+  h3prefix: '/\\*\\*',
   docprefix: '\\*',
   endcomment: '\\*/',
 });
 
-/**
+/***
  * Document:
  * A markdown document with multiple source files.
  */
@@ -45,12 +45,14 @@ var Document = function (options) {
 
 Document.prototype = {
 
-  /***
+  /**
    * parse : .parse(options)
    * parses the document and saves its JSON tree to [data].
    */
 
   parse: function (src, fname) {
+    // TODO: refactor into a new class
+
     var blocks = [];
     var block;
     var doc = this;
@@ -93,6 +95,15 @@ Document.prototype = {
             filename: fname
           });
         },
+        h3: function (m) {
+          flush();
+          block = new Block({
+            level: 3,
+            lines: [m.doc],
+            docline: i+1,
+            filename: fname
+          });
+        },
         blank: function() {
           flush();
         },
@@ -114,7 +125,7 @@ Document.prototype = {
     return blocks;
   },
 
-  /***
+  /**
    * warn : warn(text, file, line)
    * (internal) Issues a warning
    */
@@ -123,7 +134,7 @@ Document.prototype = {
     console.warn("%s:%s: warning: %s", file, line, text);
   },
 
-  /***
+  /**
    * processText : processText(text, block)
    * (internal) Propagates `text` into the given `block`.
    */
@@ -155,7 +166,7 @@ Document.prototype = {
   }
 };
 
-/**
+/***
  * Block:
  * A block. Options:
  *
