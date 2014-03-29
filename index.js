@@ -113,7 +113,7 @@ Context.prototype = {
   process: function () {
     var ctx = this;
 
-    eachLine(this.src, function (line, i) {
+    eachLine(ctx.src, function (line, i) {
       rules.switch(line, {
         h2: function (m) {
           ctx.flush();
@@ -131,9 +131,8 @@ Context.prototype = {
           ctx.block.lines.push(m.doc);
         },
         else: function () {
-          if (ctx.blocks.length === 0) return;
-          ctx.blocks[ctx.blocks.length-1].codeline = i+1;
-          ctx.flush();
+          var block = ctx.lastBlock();
+          if (block) block.codeline = i+1;
         }
       });
     });
@@ -141,6 +140,7 @@ Context.prototype = {
     ctx.flush();
   },
 
+  /** newBlock: (internal) Creates a new block. */
   newBlock: function (level, line, docline) {
     return new Block({
       level: level,
@@ -150,6 +150,12 @@ Context.prototype = {
     });
   },
 
+  /** lastBlock: (internal) Returns the last defined block. */
+  lastBlock: function () {
+    return this.blocks[this.blocks.length-1];
+  },
+
+  /** flush: finalizes the last block defined. */
   flush: function () {
     if (!this.block) return;
 
@@ -190,6 +196,12 @@ function Block (data) {
   extend(this, data);
 }
 
+/***
+ * Helpers:
+ * (internal)
+ */
+
+/** eachline: (internal) Helper for iterating through each line. */
 function eachLine (src, fn) {
   src.split('\n').forEach(fn);
 }
