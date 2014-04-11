@@ -131,3 +131,51 @@ describe 'Process text', ->
 
       * `lol` *(string)* <span class='dash'>—</span> hello
       '''
+
+    it 'multiple', ->
+      processText """
+      map:
+      does things
+
+      ~ lang (string): language
+      ~ force (boolean): forcing
+      """, @block
+
+      expect(@block.body).eq '''
+      does things
+
+      * `lang` *(string)* <span class='dash'>—</span> language
+      * `force` *(boolean)* <span class='dash'>—</span> forcing
+      '''
+
+    it 'no type', ->
+      processText """
+      map:
+      does things
+
+      ~ lang: language
+      """, @block
+
+      expect(@block.body).eq '''
+      does things
+
+      * `lang` <span class='dash'>—</span> language
+      '''
+
+    it 'with new lines', ->
+      processText """
+      map:
+      does things
+
+      ~ lang (string): language
+        etc
+      ~ force (boolean): forcing
+      """, @block
+
+      expect(@block.body).eq '''
+      does things
+
+      * `lang` *(string)* <span class='dash'>—</span> language
+        etc
+      * `force` *(boolean)* <span class='dash'>—</span> forcing
+      '''
