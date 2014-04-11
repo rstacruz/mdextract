@@ -129,7 +129,7 @@ describe 'Process text', ->
       expect(@block.body).eq '''
       does things
 
-      * `lol` *(string)* <span class='dash'>—</span> hello
+      * `lol` *(string)* <span class='dash'>&mdash;</span> hello
       '''
 
     it 'multiple', ->
@@ -144,8 +144,8 @@ describe 'Process text', ->
       expect(@block.body).eq '''
       does things
 
-      * `lang` *(string)* <span class='dash'>—</span> language
-      * `force` *(boolean)* <span class='dash'>—</span> forcing
+      * `lang` *(string)* <span class='dash'>&mdash;</span> language
+      * `force` *(boolean)* <span class='dash'>&mdash;</span> forcing
       '''
 
     it 'no type', ->
@@ -159,7 +159,7 @@ describe 'Process text', ->
       expect(@block.body).eq '''
       does things
 
-      * `lang` <span class='dash'>—</span> language
+      * `lang` <span class='dash'>&mdash;</span> language
       '''
 
     it 'with new lines', ->
@@ -175,7 +175,7 @@ describe 'Process text', ->
       expect(@block.body).eq '''
       does things
 
-      * `lang` *(string)* <span class='dash'>—</span> language
+      * `lang` *(string)* <span class='dash'>&mdash;</span> language
         etc
-      * `force` *(boolean)* <span class='dash'>—</span> forcing
+      * `force` *(boolean)* <span class='dash'>&mdash;</span> forcing
       '''
