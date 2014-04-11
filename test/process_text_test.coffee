@@ -116,3 +116,18 @@ describe 'Process text', ->
 
     and stuff
     '''
+
+  describe 'definition lists', ->
+    it 'basic', ->
+      processText """
+      map:
+      does things
+
+      ~ lol (string): hello
+      """, @block
+
+      expect(@block.body).eq '''
+      does things
+
+      * `lol` *(string)* <span class='dash'>—</span> hello
+      '''

@@ -105,8 +105,11 @@ Document.prototype = {
     });
 
     var unpackCode = require('./lib/transforms').unpackCode;
+    var expandDefLists = require('./lib/transforms').expandDefLists;
+
     block.body = bodylines.join("\n");
     block.body = unpackCode(block.body, { lang: 'js' });
+    block.body = expandDefLists(block.body);
   }
 };
 
