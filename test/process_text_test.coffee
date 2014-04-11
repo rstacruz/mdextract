@@ -44,3 +44,75 @@ describe 'Process text', ->
 
     expect(@block.heading).eq 'map'
     expect(@block.body).eq 'maps a function to\nmultiple elements'
+
+  it 'code blocks with 4-space indent', ->
+    processText """
+    map:
+    does things
+
+        function() {
+        }
+
+    and stuff
+    """, @block
+
+    expect(@block.body).eq '''
+    does things
+
+    ```js
+    function() {
+    }
+    ```
+
+    and stuff
+    '''
+
+  it 'code blocks with 2-space indent', ->
+    processText """
+    map:
+    does things
+
+      function() {
+      }
+
+    and stuff
+    """, @block
+
+    expect(@block.body).eq '''
+    does things
+
+    ```js
+    function() {
+    }
+    ```
+
+    and stuff
+    '''
+
+  it 'consolidates multiple blocks', ->
+    processText """
+    map:
+    does things
+
+      function() {
+      }
+
+      function() {
+      }
+
+    and stuff
+    """, @block
+
+    expect(@block.body).eq '''
+    does things
+
+    ```js
+    function() {
+    }
+
+    function() {
+    }
+    ```
+
+    and stuff
+    '''

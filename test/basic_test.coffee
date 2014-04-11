@@ -33,7 +33,7 @@ describe 'Mdextract', ->
     out = mdextract(str).blocks
     expect(out).have.length 1
     expect(out[0].heading).eq 'hello'
-    expect(out[0].body).eq 'world\n\n    abc'
+    expect(out[0].body).eq 'world\n\n```js\nabc\n```'
     expect(out[0].level).eq 3
 
   it 'level 2', ->

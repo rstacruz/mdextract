@@ -38,8 +38,10 @@ var rules = new Matcher({
  */
 
 var Document = function (options) {
-  /*** options: the options passed onto the constructor. */
+  /** options: the options passed onto the constructor. */
   this.options = options || {};
+
+  /** blocks: array of blocks. */
   this.blocks = [];
 };
 
@@ -54,6 +56,24 @@ Document.prototype = {
     var ctx = new Context(this, src, fname);
     ctx.process();
     this.blocks = this.blocks.concat(ctx.blocks);
+  },
+
+  toMarkdown: function () {
+    var lines = [];
+
+    this.blocks.forEach(function (block) {
+      var prefix = Array(block.level+1).join('#');
+      var headingText = prefix + ' ' + block.heading;
+      if (block.subheading) headingText += ' `' + block.subheading + '`';
+
+      lines.push('<a name="'+slugify(block.heading)+'"></a>');
+      lines.push(headingText);
+      lines.push('');
+      lines.push(block.body);
+      lines.push('');
+    });
+
+    return lines.join('\n').trim();
   },
 
   /**
@@ -84,7 +104,9 @@ Document.prototype = {
       }
     });
 
+    var unpackCode = require('./lib/transforms').unpackCode;
     block.body = bodylines.join("\n");
+    block.body = unpackCode(block.body, { lang: 'js' });
   }
 };
 
@@ -206,4 +228,10 @@ function eachLine (src, fn) {
   src.split('\n').forEach(fn);
 }
 
+/** slugify: slugger */
+function slugify (str) {
+  return str.match(/[A-Za-z0-9]+/g).join('_');
+}
+
 mdextract.Document = Document;
+

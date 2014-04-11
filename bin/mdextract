@@ -3,8 +3,10 @@
 mdextract = require('../index')
 
 readStdin(function (err, data) {
-  var output = mdextract(data);
-  console.log(JSON.stringify(output, null, 2));
+  var doc = mdextract(data);
+  console.log(doc.toMarkdown());
+
+  // console.log(JSON.stringify(doc, null, 2));
 });
 
 function readStdin(fn) {
