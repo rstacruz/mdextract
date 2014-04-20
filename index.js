@@ -110,6 +110,11 @@ Document.prototype = {
     block.body = bodylines.join("\n");
     block.body = unpackCode(block.body, { lang: 'js' });
     block.body = expandDefLists(block.body);
+
+    if (m = block.body.match(/^\(internal\)\s*(.+)$/i)) {
+      block.body = m[1];
+      block.internal = true;
+    }
   }
 };
 
@@ -162,7 +167,8 @@ Context.prototype = {
       level: level,
       lines: [line],
       docline: docline,
-      filename: this.fname
+      filename: this.fname,
+      internal: false
     });
   },
 
