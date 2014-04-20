@@ -67,6 +67,34 @@ describe 'Process text', ->
     and stuff
     '''
 
+  it 'complex code blocks', ->
+    processText """
+    map:
+    does things
+
+        var a = function() {
+          return {
+            foo: 'bar'
+          };
+        }
+
+    and stuff
+    """, @block
+
+    expect(@block.body).eq '''
+    does things
+
+    ```js
+    var a = function() {
+      return {
+        foo: 'bar'
+      };
+    }
+    ```
+
+    and stuff
+    '''
+
   it 'code blocks with 2-space indent', ->
     processText """
     map:
