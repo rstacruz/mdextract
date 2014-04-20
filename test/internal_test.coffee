@@ -16,7 +16,7 @@ describe 'Internal', ->
     expect(out[0].heading).eq 'hello'
     expect(out[0].internal).be.true
 
-  it 'ok', ->
+  it 'private', ->
     str = """
     /**
      * hello:
@@ -43,3 +43,29 @@ describe 'Internal', ->
     out = mdextract(str).blocks
     expect(out).have.length 1
     expect(out[0].internal).be.false
+
+  describe 'toMarkdown', ->
+    beforeEach ->
+      @str = """
+      /**
+       * setFoo:
+       * setter
+       */
+
+      setFoo = function() {};
+
+      /**
+       * _foo:
+       * (private) private var
+       */
+
+      _foo = null;
+      """
+
+    it 'default output', ->
+      out = mdextract(@str).toMarkdown()
+      expect(out).to.not.match /_foo/
+
+    it 'showInternal: true', ->
+      out = mdextract(@str).toMarkdown({ showInternal: true })
+      expect(out).to.match /_foo/

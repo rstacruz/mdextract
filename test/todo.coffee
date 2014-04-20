@@ -9,3 +9,4 @@ describe 'to do', ->
     it 'handling no headers', ->
     it 'pre block', ->
     it 'definition list transformations', ->
+    it '--internal', ->

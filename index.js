@@ -58,10 +58,13 @@ Document.prototype = {
     this.blocks = this.blocks.concat(ctx.blocks);
   },
 
-  toMarkdown: function () {
+  toMarkdown: function (options) {
     var lines = [];
 
     this.blocks.forEach(function (block) {
+      // skip internal blocks
+      if (block.internal && !(options && options.showInternal)) return;
+
       var prefix = Array(block.level+1).join('#');
       var headingText = prefix + ' ' + block.heading;
       if (block.subheading) headingText += ' `' + block.subheading + '`';
