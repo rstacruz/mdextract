@@ -3,13 +3,16 @@
 var mdextract = require('../index');
 var argv = process.argv;
 
-var showInternal = ~argv.indexOf('--internal');
+var showInternal = argv.indexOf('--internal') > -1;
+var json = argv.indexOf('--json') > -1;
 
 readStdin(function (err, data) {
   var doc = mdextract(data);
-  console.log(doc.toMarkdown({ showInternal: showInternal }));
-
-  // console.log(JSON.stringify(doc, null, 2));
+  if (json) {
+    console.log(JSON.stringify(doc, null, 2));
+  } else {
+    console.log(doc.toMarkdown({ showInternal: showInternal }));
+  }
 });
 
 function readStdin(fn) {

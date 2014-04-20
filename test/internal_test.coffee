@@ -16,6 +16,38 @@ describe 'Internal', ->
     expect(out[0].heading).eq 'hello'
     expect(out[0].internal).be.true
 
+  it 'with new lines', ->
+    str = """
+    /**
+     * hello:
+     * (internal) abc
+     * def
+     * ghi
+     */
+
+    var x = y
+    """
+
+    out = mdextract(str).blocks
+    expect(out).have.length 1
+    expect(out[0].heading).eq 'hello'
+    expect(out[0].internal).be.true
+
+  it 'with code sample', ->
+    str = """
+    /**
+     * get : get(x)
+     * (internal) description
+     */
+
+    var x = y
+    """
+
+    out = mdextract(str).blocks
+    expect(out).have.length 1
+    expect(out[0].heading).eq 'get'
+    expect(out[0].internal).be.true
+
   it 'private', ->
     str = """
     /**
