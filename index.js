@@ -111,7 +111,7 @@ Document.prototype = {
     block.body = unpackCode(block.body, { lang: 'js' });
     block.body = expandDefLists(block.body);
 
-    if (m = block.body.match(/^\(internal\)\s*(.+)$/i)) {
+    if (m = block.body.match(/^\((?:internal|private)\)\s*(.+)$/i)) {
       block.body = m[1];
       block.internal = true;
     }

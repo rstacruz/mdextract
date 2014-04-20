@@ -16,6 +16,21 @@ describe 'Internal', ->
     expect(out[0].heading).eq 'hello'
     expect(out[0].internal).be.true
 
+  it 'ok', ->
+    str = """
+    /**
+     * hello:
+     * (private) its great
+     */
+
+    var x = y
+    """
+
+    out = mdextract(str).blocks
+    expect(out).have.length 1
+    expect(out[0].heading).eq 'hello'
+    expect(out[0].internal).be.true
+
   it 'negative', ->
     str = """
     /**
