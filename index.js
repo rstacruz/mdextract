@@ -195,7 +195,7 @@ Context.prototype = {
     delete this.block.lines;
 
     if (!this.block.heading) {
-      this.warn("no heading found", block.docline);
+      this.warn("no heading found", this.block.docline);
       this.block = null;
       return;
     }
