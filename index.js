@@ -67,10 +67,10 @@ Document.prototype = {
 
       var prefix = Array(block.level+1).join('#');
       var headingText = prefix + ' ' + block.heading;
-      if (block.subheading) headingText += ' `' + block.subheading + '`';
 
       lines.push('<a name="'+slugify(block.heading)+'"></a>');
       lines.push(headingText);
+      if (block.subheading) lines.push('> `' + block.subheading + '`');
       lines.push('');
       lines.push(block.body);
       lines.push('');
