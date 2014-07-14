@@ -77,7 +77,9 @@ function updateFile (data) {
     var doc = mdextract(fs.readFileSync(fname, 'utf-8'));
     return [
       open,
+      "",
       doc.toMarkdown(mdOpts),
+      "",
       close
     ].join("\n");
   });

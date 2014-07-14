@@ -1,6 +1,7 @@
+<!-- include: index.js -->
+
 ## mdextract
 > `mdextract(src, options)`
-
 
 Extracts source documents.
 
@@ -11,51 +12,79 @@ var doc = mdextract(source);
 console.log(doc.toMarkdown());
 ```
 
-Returns a [Document](#document) instance.
+Returns a [Document] instance.
 
 ## Document
 > `new Document(options)`
 
-A markdown document with multiple source files.
+A document represents a bunch of source code.
+A [mdextract] call will return a *Document* instance.
 
-The options available are:
+```js
+var mdextract = require('mdextract');
+var doc = mdextract(source);
+```
+
+Options available:
 
 * `forceHeadings` *(boolean)* <span class='dash'>&mdash;</span> If true, sections without headings will be
   ignored.
 * `lang` *(string)* <span class='dash'>&mdash;</span> Language to be used. Defaults to `"js"`.
 
+When invoking mdextract from the command line with a `--json` option, the
+result is a JSONified Document instance.
+
 ### options
 
-the available options. See [Document](#document).
+The available options as received through the [Document] constructor.
+Example:
+
+```js
+doc = mdextract(source);
+
+doc.options
+=> { lang: "js" }
+```
 
 ### blocks
 
-array of blocks.
+The list of section blocks as parsed away from the source. This is an
+array of [Block] instances.
 
-### parse
-> `.parse(options)`
+```js
+doc = mdextract(source);
 
-parses the document and saves its JSON tree to [data].
+doc.blocks
+=> [
+  { internal: false,
+    docline: 55,
+    codeline: 66,
+    level: 3,
+    heading: "A heading",
+    body: "This is the body in *markdown* format." },
+  { ... },
+  ...
+]
+```
 
 ### toMarkdown
 > `.toMarkdown(options)`
 
 Converts the document to markdown. Returns the Markdown string.
+
+```js
+doc = mdextract(source);
+console.log(doc.toMarkdown());
+=> "## heading\nthis is stuff extracted from your source.\n..."
+```
+
 Available options are:
 
 * `showInternal` *(boolean)* <span class='dash'>&mdash;</span> renders internal/private API if true.
 
-## Context
-
-a parsing context.
-
-### flush
-
-finalizes the last block defined.
-
 ## Block
 
-A block. Options:
+A section block. Options:
 
 * `docline` *(number)* <span class='dash'>&mdash;</span> line number where the documentation starts
 * `codeline` *(number)* <span class='dash'>&mdash;</span> line number where code starts
@@ -63,3 +92,9 @@ A block. Options:
 * `heading` *(string)* <span class='dash'>&mdash;</span> heading text
 * `subheading` *(string, optional)* <span class='dash'>&mdash;</span> optional subheading text
 * `body` *(string)* <span class='dash'>&mdash;</span> body text
+
+<!-- /include: index.js -->
+
+[mdextract]: #mdextract
+[Document]: #document
+[Block]: #block

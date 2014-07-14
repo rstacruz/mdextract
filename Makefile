@@ -1,2 +1,2 @@
 API.md: index.js
-	./bin/mdextract $< > $@
+	./bin/mdextract -u $@

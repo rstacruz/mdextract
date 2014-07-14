@@ -5,7 +5,6 @@ var extend = require('util')._extend;
 
 /***
  * mdextract : mdextract(src, options)
- *
  * Extracts source documents.
  *
  *     var mdextract = require('mdextract');
@@ -13,7 +12,7 @@ var extend = require('util')._extend;
  *
  *     console.log(doc.toMarkdown());
  *
- * Returns a [Document](#document) instance.
+ * Returns a [Document] instance.
  */
 
 var mdextract = module.exports = function (src, options) {
@@ -38,29 +37,63 @@ var rules = new Matcher({
 
 /***
  * Document : new Document(options)
- * A markdown document with multiple source files.
- * 
- * The options available are:
+ * A document represents a bunch of source code.
+ * A [mdextract] call will return a *Document* instance.
+ *
+ *     var mdextract = require('mdextract');
+ *     var doc = mdextract(source);
+ *
+ * Options available:
  *
  * ~ forceHeadings (boolean): If true, sections without headings will be
  *   ignored.
  * ~ lang (string): Language to be used. Defaults to `"js"`.
+ *
+ * When invoking mdextract from the command line with a `--json` option, the
+ * result is a JSONified Document instance.
  */
 
 var Document = function (options) {
-  /** options: the available options. See [Document](#document). */
+  /**
+   * options:
+   * The available options as received through the [Document] constructor.
+   * Example:
+   *
+   *     doc = mdextract(source);
+   *
+   *     doc.options
+   *     => { lang: "js" }
+   */
   this.options = options || {};
-
   this.options.lang = this.options.lang || 'js';
 
-  /** blocks: array of blocks. */
+  /** 
+   * blocks:
+   * The list of section blocks as parsed away from the source. This is an
+   * array of [Block] instances.
+   * 
+   *     doc = mdextract(source);
+   *
+   *     doc.blocks
+   *     => [
+   *       { internal: false,
+   *         docline: 55,
+   *         codeline: 66,
+   *         level: 3,
+   *         heading: "A heading",
+   *         body: "This is the body in *markdown* format." },
+   *       { ... },
+   *       ...
+   *     ]
+   */
+
   this.blocks = [];
 };
 
 Document.prototype = {
   /**
    * parse : .parse(options)
-   * parses the document and saves its JSON tree to [data].
+   * (internal) parses the document and saves its JSON tree to [blocks].
    */
 
   parse: function (src, fname) {
@@ -72,6 +105,11 @@ Document.prototype = {
   /**
    * toMarkdown : .toMarkdown(options)
    * Converts the document to markdown. Returns the Markdown string.
+   *
+   *     doc = mdextract(source);
+   *     console.log(doc.toMarkdown());
+   *     => "## heading\nthis is stuff extracted from your source.\n..."
+   *
    * Available options are:
    *
    * ~ showInternal (boolean): renders internal/private API if true.
@@ -141,7 +179,7 @@ Document.prototype = {
 };
 
 /***
- * Context: a parsing context.
+ * Context: (internal) a parsing context.
  */
 
 function Context(doc, src, fname) {
@@ -208,7 +246,7 @@ Context.prototype = {
     console.warn("%s:%s: warning: %s", this.fname, line, text);
   },
 
-  /** flush: finalizes the last block defined. */
+  /** flush: (internal) finalizes the last block defined. */
   flush: function () {
     if (!this.block) return;
 
@@ -235,7 +273,7 @@ Context.prototype = {
 
 /***
  * Block:
- * A block. Options:
+ * A section block. Options:
  *
  * ~ docline (number): line number where the documentation starts
  * ~ codeline (number): line number where code starts
@@ -265,4 +303,3 @@ function slugify (str) {
 }
 
 mdextract.Document = Document;
-
