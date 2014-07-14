@@ -3,7 +3,8 @@
 Extracts `/** code comments */` from code files and turns them into markdown 
 docs. Supports JavaScript-style comments (other languages to come).
 
-    npm install -g mdextract
+    $ npm install -g mdextract
+    $ mdextract --help
 
 Use it to extract comments into a doc:
 
