@@ -31,9 +31,27 @@ array of blocks.
 
 parses the document and saves its JSON tree to [data].
 
+### processText
+> `processText(text, block)`
+
+Propagates `text` into the given `block`.
+
 ## Context
 
 a parsing context.
+
+### newBlock
+
+Creates a new block.
+
+### lastBlock
+
+Returns the last defined block.
+
+### warn
+> `warn(text, line)`
+
+Issues a warning
 
 ### flush
 
@@ -53,6 +71,10 @@ A block. Options:
 ## Helpers
 
 (internal)
+
+### eachline
+
+Helper for iterating through each line.
 
 ### slugify
 
