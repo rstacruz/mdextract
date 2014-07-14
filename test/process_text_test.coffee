@@ -4,7 +4,9 @@ processText = null
 
 describe 'Process text', ->
   before ->
-    processText = mdextract.Document::processText
+    @doc = new mdextract.Document()
+    processText = (args...) =>
+      @doc.processText(args...)
 
   beforeEach ->
     @block = {}

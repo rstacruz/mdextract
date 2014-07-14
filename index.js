@@ -38,8 +38,18 @@ var rules = new Matcher({
  */
 
 var Document = function (options) {
-  /** options: the options passed onto the constructor. */
+  /**
+   * options:
+   * Options to be used.
+   *
+   * ~ forceHeadings (boolean): If true, sections without headings will be
+   * ignored.
+   * ~ lang (string): Language to be used. Defaults to `"js"`.
+   */
+
   this.options = options || {};
+
+  this.options.lang = this.options.lang || 'js';
 
   /** blocks: array of blocks. */
   this.blocks = [];
@@ -111,7 +121,7 @@ Document.prototype = {
     var expandDefLists = require('./lib/transforms').expandDefLists;
 
     block.body = bodylines.join("\n");
-    block.body = unpackCode(block.body, { lang: 'js' });
+    block.body = unpackCode(block.body, { lang: this.options.lang });
     block.body = expandDefLists(block.body);
 
     if (m = block.body.match(/^\((?:internal|private)\)\s*((?:.|\s)+)$/i)) {
