@@ -21,7 +21,7 @@
     "sinon": "^1.9.0"
   },
   "bin": {
-    "command": "./bin/mdextract"
+    "mdextract": "./bin/mdextract"
   },
   "license": "MIT",
   "dependencies": {
