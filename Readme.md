@@ -91,6 +91,15 @@ this.id = null;
 this.name = "Hello";
 ```
 
+Examples
+--------
+
+ * [index.js](index.js) from mdextract ([output](API.md))
+ * [navstack.js] from Navstack ([output][navstack-out])
+
+[navstack.js]: https://github.com/rstacruz/navstack/blob/master/navstack.js
+[navstack-out]: https://github.com/rstacruz/navstack/blob/master/Readme.md
+
 Thanks
 ------
 
