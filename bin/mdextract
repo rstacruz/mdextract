@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// vim:ft=javascript
 
 var
   fs = require('fs'),
@@ -8,17 +9,40 @@ var
     internal: Boolean,
     json: Boolean,
     update: Boolean,
+    help: Boolean,
+    version: Boolean
   },
   short = {
-    u: '--update'
+    u: '--update',
+    h: '--help',
+    v: '--version'
   },
   argv = nopt(opts, short, process.argv),
   mdOpts = { showInternal: argv.internal },
-  fname = argv.argv.remain[0];
+  fname = argv.argv.remain[0],
+  doc;
+
+if (argv.help) {
+  console.log('Usage:');
+  console.log('  mdextract <input.js> [options]');
+  console.log('');
+  console.log('Options:');
+  console.log('      --internal       include internal/private APIs');
+  console.log('      --json           prints a json representation');
+  console.log('  -u, --update FILE    updates a markdown document in place');
+  console.log('  -h, --help           show usage information');
+  console.log('  -v, --version        print version');
+  process.exit();
+}
+
+if (argv.version) {
+  console.log('v' + require('../package.json').version);
+  process.exit();
+}
 
 readInput(fname, function (err, data) {
   if (argv.json) {
-    var doc = mdextract(data);
+    doc = mdextract(data);
     console.log(JSON.stringify(doc, null, 2));
   } else if (argv.update) {
     data = updateFile(data);
@@ -27,7 +51,7 @@ readInput(fname, function (err, data) {
     else
       console.log(data);
   } else {
-    var doc = mdextract(data);
+    doc = mdextract(data);
     console.log(doc.toMarkdown(mdOpts));
   }
 });

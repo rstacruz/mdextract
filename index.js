@@ -1,3 +1,5 @@
+/* jshint boss: true, maxlen: 80 */
+
 var Matcher = require('./lib/matcher');
 var extend = require('util')._extend;
 
