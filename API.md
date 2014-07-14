@@ -1,26 +1,32 @@
 ## mdextract
+> `mdextract(src, options)`
 
-hello.
 
-To extract from source, use:
+Extracts source documents.
 
 ```js
-mdextract(source, options)
+var mdextract = require('mdextract');
+var doc = mdextract(source);
+
+console.log(doc.toMarkdown());
 ```
 
-Returns a JSON block.
+Returns a [Document](#document) instance.
 
 ## Document
+> `new Document(options)`
 
 A markdown document with multiple source files.
 
-### options
-
-Options to be used.
+The options available are:
 
 * `forceHeadings` *(boolean)* <span class='dash'>&mdash;</span> If true, sections without headings will be
-ignored.
+  ignored.
 * `lang` *(string)* <span class='dash'>&mdash;</span> Language to be used. Defaults to `"js"`.
+
+### options
+
+the available options. See [Document](#document).
 
 ### blocks
 
@@ -31,27 +37,17 @@ array of blocks.
 
 parses the document and saves its JSON tree to [data].
 
-### processText
-> `processText(text, block)`
+### toMarkdown
+> `.toMarkdown(options)`
 
-Propagates `text` into the given `block`.
+Converts the document to markdown. Returns the Markdown string.
+Available options are:
+
+* `showInternal` *(boolean)* <span class='dash'>&mdash;</span> renders internal/private API if true.
 
 ## Context
 
 a parsing context.
-
-### newBlock
-
-Creates a new block.
-
-### lastBlock
-
-Returns the last defined block.
-
-### warn
-> `warn(text, line)`
-
-Issues a warning
 
 ### flush
 
@@ -67,15 +63,3 @@ A block. Options:
 * `heading` *(string)* <span class='dash'>&mdash;</span> heading text
 * `subheading` *(string, optional)* <span class='dash'>&mdash;</span> optional subheading text
 * `body` *(string)* <span class='dash'>&mdash;</span> body text
-
-## Helpers
-
-(internal)
-
-### eachline
-
-Helper for iterating through each line.
-
-### slugify
-
-slugger

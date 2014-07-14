@@ -4,14 +4,16 @@ var Matcher = require('./lib/matcher');
 var extend = require('util')._extend;
 
 /***
- * mdextract:
- * hello.
+ * mdextract : mdextract(src, options)
  *
- * To extract from source, use:
+ * Extracts source documents.
  *
- *     mdextract(source, options)
+ *     var mdextract = require('mdextract');
+ *     var doc = mdextract(source);
  *
- * Returns a JSON block.
+ *     console.log(doc.toMarkdown());
+ *
+ * Returns a [Document](#document) instance.
  */
 
 var mdextract = module.exports = function (src, options) {
@@ -35,20 +37,18 @@ var rules = new Matcher({
 });
 
 /***
- * Document:
+ * Document : new Document(options)
  * A markdown document with multiple source files.
+ * 
+ * The options available are:
+ *
+ * ~ forceHeadings (boolean): If true, sections without headings will be
+ *   ignored.
+ * ~ lang (string): Language to be used. Defaults to `"js"`.
  */
 
 var Document = function (options) {
-  /**
-   * options:
-   * Options to be used.
-   *
-   * ~ forceHeadings (boolean): If true, sections without headings will be
-   * ignored.
-   * ~ lang (string): Language to be used. Defaults to `"js"`.
-   */
-
+  /** options: the available options. See [Document](#document). */
   this.options = options || {};
 
   this.options.lang = this.options.lang || 'js';
@@ -58,7 +58,6 @@ var Document = function (options) {
 };
 
 Document.prototype = {
-
   /**
    * parse : .parse(options)
    * parses the document and saves its JSON tree to [data].
@@ -69,6 +68,14 @@ Document.prototype = {
     ctx.process();
     this.blocks = this.blocks.concat(ctx.blocks);
   },
+
+  /**
+   * toMarkdown : .toMarkdown(options)
+   * Converts the document to markdown. Returns the Markdown string.
+   * Available options are:
+   *
+   * ~ showInternal (boolean): renders internal/private API if true.
+   */
 
   toMarkdown: function (options) {
     var lines = [];
@@ -244,7 +251,7 @@ function Block (data) {
 
 /***
  * Helpers:
- * (internal)
+ * (internal) Helpers.
  */
 
 /** eachline: (internal) Helper for iterating through each line. */
@@ -252,7 +259,7 @@ function eachLine (src, fn) {
   src.split('\n').forEach(fn);
 }
 
-/** slugify: slugger */
+/** slugify: (internal) slugger */
 function slugify (str) {
   return str.match(/[A-Za-z0-9]+/g).join('_');
 }
