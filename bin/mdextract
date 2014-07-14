@@ -1,25 +1,62 @@
 #!/usr/bin/env node
 
-var mdextract = require('../index');
-var argv = process.argv;
+var
+  fs = require('fs'),
+  nopt = require('nopt'),
+  mdextract = require('../index'),
+  opts = {
+    internal: Boolean,
+    json: Boolean,
+    update: Boolean,
+  },
+  short = {
+    u: '--update'
+  },
+  argv = nopt(opts, short, process.argv),
+  mdOpts = { showInternal: argv.internal },
+  fname = argv.argv.remain[0];
 
-var showInternal = argv.indexOf('--internal') > -1;
-var json = argv.indexOf('--json') > -1;
-
-readStdin(function (err, data) {
-  var doc = mdextract(data);
-  if (json) {
+readInput(fname, function (err, data) {
+  if (argv.json) {
+    var doc = mdextract(data);
     console.log(JSON.stringify(doc, null, 2));
+  } else if (argv.update) {
+    data = updateFile(data);
+    if (fname)
+      fs.writeFileSync(fname, data, 'utf-8');
+    else
+      console.log(data);
   } else {
-    console.log(doc.toMarkdown({ showInternal: showInternal }));
+    var doc = mdextract(data);
+    console.log(doc.toMarkdown(mdOpts));
   }
 });
 
-function readStdin(fn) {
+function readInput (fname, fn) {
+  if (fname)
+    fs.readFile(fname, 'utf-8', fn);
+  else
+    readStdin(fn);
+}
+
+function readStdin (fn) {
   process.stdin.resume(); /* paused by default */
   process.stdin.setEncoding('utf8');
 
   var data = '';
   process.stdin.on('data', function(chunk) { data += chunk.toString(); });
   process.stdin.on('end', function() { fn(null, data); });
+}
+
+function updateFile (data) {
+  data = data.replace(/(<!-- include: (.*?) -->)[\s\S]*(<!-- \/include(?:: .*?)? -->)/g, function (_, open, fname, close) {
+    var doc = mdextract(fs.readFileSync(fname, 'utf-8'));
+    return [
+      open,
+      doc.toMarkdown(mdOpts),
+      close
+    ].join("\n");
+  });
+
+  return data;
 }

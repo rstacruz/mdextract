@@ -25,6 +25,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "nopt": "^2.2.0"
+    "nopt": "^2.2.1"
   }
 }
