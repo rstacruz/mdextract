@@ -18,6 +18,39 @@ Or:
 
     $ mdextract --update README.md
 
+File format
+-----------
+
+Sections:
+
+```js
+/**
+ * Sections:
+ * start your sections with two stars. They will be turned into <h3> sections.
+ */
+```
+
+Main sections (h2):
+
+```js
+/***
+ * Main sections:
+ * start your main sections with three stars. They will be turned into <h2> 
+ sections.
+ */
+```
+
+Code:
+
+```js
+/***
+ * Main sections:
+ * start your main sections with three stars. They will be turned into <h2> 
+ sections.
+ */
+```
+
+
 Thanks
 ------
 
