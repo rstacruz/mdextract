@@ -1,13 +1,13 @@
 # mdextract
 
 Extracts `/** code comments */` from code files and turns them into markdown 
-docs.
+docs. Supports JavaScript-style comments (other languages to come).
 
-Usage:
+Use it to extract comments into a doc:
 
     $ mdextract file.js > docs.md
 
-Or:
+Or update a doc:
 
     $ cat README.md
 
@@ -18,10 +18,13 @@ Or:
 
     $ mdextract --update README.md
 
+...the `--update` mode is great for making Readme-based documentation in small 
+projects. It is [idempotent].
+
 File format
 -----------
 
-Sections:
+__Sections:__ mark them with comments beginning with two stars.
 
 ```
 /**
@@ -33,22 +36,21 @@ Sections:
  */
 ```
 
-Main sections (h2):
+__Main sections:__ three stars.
 
 ```
 /***
  * Main sections:
- * start your main sections with three stars. They will be turned into <h2> 
- sections.
+ * If you start sections with three stars, the headings will be turned into
+ * `<h2>` headings.
  */
 ```
 
-Code blocks:
+__Code blocks:__ They will be converted into syntax-highlighted code fences.
 
 ```
 /**
- * Here's some example code. They will be converted into syntax-highlighted
- * code fences.
+ * An example:
  *
  *     function () {
  *       return true;
@@ -56,15 +58,34 @@ Code blocks:
  */
 ```
 
-Definition lists:
+__Definition lists:__ Use `~` as a bullet. Great for parameter lists.
 
 ```
 /**
- * Specify parameters with the special definition list syntax (~).
- *
  * ~ name: description
  * ~ id: the identifier
  * ~ callback (Function): the callback to run afterwards
+ */
+```
+
+__Sample usage:__ Use `name : usage` as your first line to specify a sample 
+usage.
+
+```
+/**
+ * push : push(name, fn)
+ * Adds an item to the stack.
+ */
+```
+
+__Single-line mode:__ for short documentations.
+
+```js
+/** id: the identifier. */
+this.id = null;
+
+/** name: the name. */
+this.name = "Hello";
 ```
 
 Thanks
@@ -79,3 +100,4 @@ Authored and maintained by Rico Sta. Cruz with help from [contributors].
 
 [MIT License]: http://mit-license.org/
 [contributors]: http://github.com/rstacruz/mdextract/contributors
+[idempotent]: https://en.wikipedia.org/wiki/Idempotent
