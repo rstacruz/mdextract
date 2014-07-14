@@ -43,7 +43,7 @@ Main sections (h2):
  */
 ```
 
-Code:
+Code blocks:
 
 ```
 /**
@@ -59,7 +59,13 @@ Code:
 Definition lists:
 
 ```
-
+/**
+ * Specify parameters with the special definition list syntax (~).
+ *
+ * ~ name: description
+ * ~ id: the identifier
+ * ~ callback (Function): the callback to run afterwards
+```
 
 Thanks
 ------
