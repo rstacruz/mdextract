@@ -23,16 +23,19 @@ File format
 
 Sections:
 
-```js
+```
 /**
  * Sections:
- * start your sections with two stars. They will be turned into <h3> sections.
+ * Start your sections with two stars.
+ *
+ * If your first line of text ends in a colon (:), it will be turned into an
+ * `<h3>` heading.
  */
 ```
 
 Main sections (h2):
 
-```js
+```
 /***
  * Main sections:
  * start your main sections with three stars. They will be turned into <h2> 
@@ -42,12 +45,19 @@ Main sections (h2):
 
 Code:
 
-```js
-/***
- * Main sections:
- * start your main sections with three stars. They will be turned into <h2> 
- sections.
+```
+/**
+ * Here's some example code. They will be converted into syntax-highlighted
+ * code fences.
+ *
+ *     function () {
+ *       return true;
+ *     }
  */
+```
+
+Definition lists:
+
 ```
 
 

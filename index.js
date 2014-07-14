@@ -66,11 +66,10 @@ Document.prototype = {
       if (block.internal && !(options && options.showInternal)) return;
 
       var prefix = Array(block.level+1).join('#');
-      var headingText = prefix + ' ' + block.heading;
 
-      lines.push(headingText);
+      if (block.heading) lines.push(prefix + ' ' + block.heading);
       if (block.subheading) lines.push('> `' + block.subheading + '`');
-      lines.push('');
+      if (block.heading || block.subheading) lines.push('');
       lines.push(block.body);
       lines.push('');
     });
@@ -100,6 +99,8 @@ Document.prototype = {
         else if (m = line.match(/^(.*?):(?: (.*?))?$/)) {
           block.heading = m[1];
           bodylines.push(m[2]);
+        } else {
+          bodylines.push(line);
         }
       } else {
         bodylines.push(line);
@@ -202,7 +203,7 @@ Context.prototype = {
     this.doc.processText(this.block.lines, this.block);
     delete this.block.lines;
 
-    if (!this.block.heading) {
+    if (this.doc.options.forceHeadings && this.block.heading) {
       this.warn("no heading found", this.block.docline);
       this.block = null;
       return;
