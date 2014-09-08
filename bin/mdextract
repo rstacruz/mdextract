@@ -19,7 +19,7 @@ var
     v: '--version'
   },
   argv = nopt(opts, short, process.argv),
-  mdOpts = { showInternal: argv.internal, showCode: opts['show-code'], lang: 'js' },
+  mdOpts = { showInternal: argv.internal, showCode: argv['show-code'], lang: 'js' },
   fname = argv.argv.remain[0],
   doc;
 
