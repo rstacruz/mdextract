@@ -113,6 +113,7 @@ Document.prototype = {
    * Available options are:
    *
    * ~ showInternal (boolean): renders internal/private API if true.
+   * ~ showCode (boolean): renders code as well.
    */
 
   toMarkdown: function (options) {
@@ -129,6 +130,12 @@ Document.prototype = {
       if (block.heading || block.subheading) lines.push('');
       lines.push(block.body);
       lines.push('');
+      if (options && options.showCode) {
+        lines.push('> ```' + (options && options.lang || 'js'));
+        lines.push(block.source.replace(/[\n\s]*$/, ''));
+        lines.push('```');
+        lines.push('');
+      }
     });
 
     return lines.join('\n').trim();
@@ -213,7 +220,10 @@ Context.prototype = {
         },
         else: function () {
           var block = ctx.lastBlock();
-          if (block) block.codeline = i+1;
+          if (block) {
+            block.codeline = i+1;
+            block.source += line + "\n";
+          }
         }
       });
     });
@@ -228,6 +238,7 @@ Context.prototype = {
       lines: [line],
       docline: docline,
       filename: this.fname,
+      source: '',
       internal: false
     });
   },

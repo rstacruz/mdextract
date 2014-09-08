@@ -10,7 +10,8 @@ var
     json: Boolean,
     update: Boolean,
     help: Boolean,
-    version: Boolean
+    version: Boolean,
+    'show-code': Boolean
   },
   short = {
     u: '--update',
@@ -18,7 +19,7 @@ var
     v: '--version'
   },
   argv = nopt(opts, short, process.argv),
-  mdOpts = { showInternal: argv.internal },
+  mdOpts = { showInternal: argv.internal, showCode: opts['show-code'], lang: 'js' },
   fname = argv.argv.remain[0],
   doc;
 
@@ -29,6 +30,7 @@ if (argv.help) {
   console.log('Options:');
   console.log('      --internal       include internal/private APIs');
   console.log('      --json           prints a json representation');
+  console.log('      --show-code      prints code too');
   console.log('  -u, --update FILE    updates a markdown document in place');
   console.log('  -h, --help           show usage information');
   console.log('  -v, --version        print version');
@@ -42,7 +44,7 @@ if (argv.version) {
 
 readInput(fname, function (err, data) {
   if (argv.json) {
-    doc = mdextract(data);
+    doc = mdextract(data, { lang: mdOpts.lang });
     console.log(JSON.stringify(doc, null, 2));
   } else if (argv.update) {
     data = updateFile(data);
