@@ -24,6 +24,15 @@ Or update a doc:
 ...the `--update` mode is great for making Readme-based documentation in small 
 projects. It is [idempotent].
 
+Examples
+--------
+
+ * [index.js](index.js) from mdextract ([output](API.md))
+ * [navstack.js] from Navstack ([output][navstack-out])
+
+[navstack.js]: https://github.com/rstacruz/navstack/blob/master/navstack.js
+[navstack-out]: https://github.com/rstacruz/navstack/blob/master/Readme.md
+
 File format
 -----------
 
@@ -90,15 +99,6 @@ this.id = null;
 /** name: the name. */
 this.name = "Hello";
 ```
-
-Examples
---------
-
- * [index.js](index.js) from mdextract ([output](API.md))
- * [navstack.js] from Navstack ([output][navstack-out])
-
-[navstack.js]: https://github.com/rstacruz/navstack/blob/master/navstack.js
-[navstack-out]: https://github.com/rstacruz/navstack/blob/master/Readme.md
 
 Thanks
 ------
