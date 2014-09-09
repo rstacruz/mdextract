@@ -28,10 +28,13 @@ Examples
 --------
 
  * [index.js](index.js) from mdextract ([output](API.md))
+ * [read-input.js] from read-input ([output][read-input-out])
  * [navstack.js] from Navstack ([output][navstack-out])
 
 [navstack.js]: https://github.com/rstacruz/navstack/blob/master/navstack.js
 [navstack-out]: https://github.com/rstacruz/navstack/blob/master/Readme.md
+[read-input.js]: https://github.com/rstacruz/read-input/blob/master/index.js
+[read-input-out]: https://github.com/rstacruz/read-input/blob/master/Readme.md
 
 File format
 -----------
