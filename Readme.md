@@ -6,23 +6,35 @@ docs. Supports JavaScript-style comments (other languages to come).
     $ npm install -g mdextract
     $ mdextract --help
 
+Given any code with Markdown embedded in `/** comments */`:
+
+```js
+/**
+ * ## API
+ * This is the API. (...)
+ */
+
+function api() { ... }
+```
+
 Use it to extract comments into a doc:
 
-    $ mdextract file.js > docs.md
+```sh
+$ mdextract file.js > docs.md
+```
 
-Or update a doc:
+Voila!
 
-    $ cat README.md
+```
+$ cat docs.md
 
-      add `include` comments to your markdown file
+## API
+This is the API. (...)
 
-      <!-- include: file.js -->
-      <!-- /include: file.js -->
+$
+```
 
-    $ mdextract --update README.md
-
-...the `--update` mode is great for making Readme-based documentation in small 
-projects. It is [idempotent].
+<br>
 
 Examples
 --------
@@ -35,6 +47,30 @@ Examples
 [navstack-out]: https://github.com/rstacruz/navstack/blob/master/Readme.md
 [read-input.js]: https://github.com/rstacruz/read-input/blob/master/index.js
 [read-input-out]: https://github.com/rstacruz/read-input/blob/master/Readme.md
+
+<br>
+
+Update mode
+-----------
+
+You can put `<!-- include: ___ -->` markers in a document:
+
+    $ cat README.md
+
+      add `include` comments to your markdown file
+
+      <!-- include: file.js -->
+      <!-- /include: file.js -->
+
+And use `mdextract --update` to update the file, pulling Markdown from other
+files:
+
+    $ mdextract --update README.md
+
+...the `--update` mode is great for making Readme-based documentation in small 
+projects. It is [idempotent].
+
+<br>
 
 File format
 -----------
