@@ -75,7 +75,17 @@ projects. It is [idempotent].
 File format
 -----------
 
-__Sections:__ mark them with comments beginning with two stars.
+__Two stars:__ Any code block that begins with two stars `**` will be treated
+as Markdown text.
+
+```js
+/**
+ * hello
+ */
+```
+
+__Sections:__ mark them with comments beginning with two stars, then have the
+first line end in a colon.
 
 ```
 /**
@@ -87,7 +97,7 @@ __Sections:__ mark them with comments beginning with two stars.
  */
 ```
 
-__Main sections:__ three stars.
+__Main sections:__ three stars, first line ends in a colon.
 
 ```
 /***
@@ -97,7 +107,8 @@ __Main sections:__ three stars.
  */
 ```
 
-__Code blocks:__ They will be converted into syntax-highlighted code fences.
+__Code blocks:__ Markdown code blocks will be converted into syntax-highlighted
+code fences.
 
 ```
 /**
