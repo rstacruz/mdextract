@@ -75,7 +75,7 @@ function readStdin (fn) {
 }
 
 function updateFile (data) {
-  data = data.replace(/(<!-- include: (.*?) -->)[\s\S]*(<!-- \/include(?:: .*?)? -->)/g, function (_, open, fname, close) {
+  data = data.replace(/(<!-- include: (.*?) -->)[\s\S]*(<!-- \/include(?:: (\2))? -->)/g, function (_, open, fname, close) {
     var doc = mdextract(fs.readFileSync(fname, 'utf-8'));
     return [
       open,
